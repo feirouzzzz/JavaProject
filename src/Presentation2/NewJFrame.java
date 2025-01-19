@@ -21,6 +21,7 @@ public class NewJFrame extends JFrame {
         cardPanel.add(new LoginPage(), "LoginPage");
         cardPanel.add(new SignUpPage(), "SignUpPage");
         cardPanel.add(new HomePage(), "HomePage");
+        cardPanel.add(new GestionClientsPage(), "GestionClientsPage");
 
         // Add the card panel to the content pane
         this.getContentPane().add(cardPanel);
@@ -42,12 +43,17 @@ public class NewJFrame extends JFrame {
         cardLayout.show(cardPanel, "SignUpPage");
     }
 
-    public void showLoginPage() {
-        // Show the LoginPage
-        cardLayout.show(cardPanel, "LoginPage");
+    public void showGestionClientsPage() {
+        // Show the GestionClientsPage
+        cardLayout.show(cardPanel, "GestionClientsPage");
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new NewJFrame().setVisible(true));
+    }
+
+    public void showLoginPage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'showLoginPage'");
     }
 }
