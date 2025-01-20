@@ -1,10 +1,17 @@
 package Presentation2;
 
 import javax.swing.*;
+
+import entities.Client;
+import service.ClientService;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class LoginPage extends JPanel {
+
+    ClientService clientService = new ClientService();
 
     public LoginPage() {
         setLayout(new BorderLayout());
@@ -17,7 +24,7 @@ public class LoginPage extends JPanel {
         leftPanel.setPreferredSize(new Dimension(300, 600)); // Set image space size
 
         // Add your image here
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("img2.jpg"));
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("./images/login.jpg"));
         if (imageIcon.getIconWidth() == -1) {
             System.out.println("Image not found, check the path.");
         } else {
@@ -95,6 +102,7 @@ public class LoginPage extends JPanel {
     // Mock login validation method
     private boolean validateLogin(String email, String password) {
         // Replace with actual validation logic
-        return email.equals("user@example.com") && password.equals("password123");
+        // return email.equals("feirouz@gmail.com") && password.equals("password123");
+        return true;
     }
 }

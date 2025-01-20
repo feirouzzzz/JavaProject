@@ -1,11 +1,13 @@
-import java.awt.*;
-import java.awt.event.*;
+package Presentation2;
+
 import javax.swing.*;
+import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import service.ClientService;
 import entities.Client;
 
-public class GestionClients {
+public class GestionClients extends JPanel {
+
     private ClientService clientService;
     private JTable clientTable;
     private DefaultTableModel tableModel;
@@ -14,8 +16,7 @@ public class GestionClients {
     public GestionClients() {
         clientService = new ClientService(); // Initialize the service
 
-        JFrame frame = new JFrame("Gestion des Clients");
-        frame.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
         // Create custom color
         Color customColor = new Color(106, 27, 154); // Violet-like color
@@ -28,7 +29,7 @@ public class GestionClients {
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(customColor);
         titlePanel.add(titleLabel);
-        frame.add(titlePanel, BorderLayout.NORTH);
+        add(titlePanel, BorderLayout.NORTH);
 
         // Search bar
         JPanel searchPanel = new JPanel();
@@ -40,18 +41,14 @@ public class GestionClients {
 
         JButton searchButton = new JButton("🔍");
         searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Implement search logic here, for example by name or ID
-                String searchText = searchField.getText();
-                if (!searchText.isEmpty()) {
-                    // Simulate search
-                    JOptionPane.showMessageDialog(frame, "Searching for: " + searchText);
-                }
+        searchButton.addActionListener(e -> {
+            String searchText = searchField.getText();
+            if (!searchText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Searching for: " + searchText);
             }
         });
         searchPanel.add(searchButton);
-        frame.add(searchPanel, BorderLayout.CENTER);
+        add(searchPanel, BorderLayout.CENTER);
 
         // Action Buttons (Add, Update, Delete)
         JPanel buttonPanel = new JPanel();
@@ -64,7 +61,7 @@ public class GestionClients {
         buttonPanel.add(ajouterBtn);
         buttonPanel.add(modifierBtn);
         buttonPanel.add(supprimerBtn);
-        frame.add(buttonPanel, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
 
         // Table to display clients
         String[] columns = { "ID", "Prenom", "Nom", "Telephone", "Email" };
@@ -74,124 +71,57 @@ public class GestionClients {
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane scrollPane = new JScrollPane(clientTable);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
 
-        // Actions for buttons
-        ajouterBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Logic to add a new client
-                String prenom = JOptionPane.showInputDialog("Enter prenom:");
-                String nom = JOptionPane.showInputDialog("Enter nom:");
-                String telephone = JOptionPane.showInputDialog("Enter telephone:");
-                String email = JOptionPane.showInputDialog("Enter email:");
-
-                Client client = new Client(0, prenom, nom, telephone, email); // ID will be auto-generated
-                boolean isCreated = clientService.create(client);
-                if (isCreated) {
-                    JOptionPane.showMessageDialog(frame, "Client added successfully!");
-                    refreshTable(); // Refresh the table after adding a client
-                }
-            }
+        // Add a button to return to HomePage
+        JButton returnHomeButton = new JButton("Return to Home Page");
+        returnHomeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        returnHomeButton.setBackground(customColor);
+        returnHomeButton.setForeground(Color.WHITE);
+        returnHomeButton.setFocusPainted(false);
+        returnHomeButton.addActionListener(e -> {
+            // Call the method from NewJFrame to switch to the HomePage
+            ((NewJFrame) SwingUtilities.getWindowAncestor(this)).showHomePage();
         });
 
-        modifierBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Logic to modify an existing client
-                int selectedRow = clientTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    int id = (int) clientTable.getValueAt(selectedRow, 0);
-                    Client client = clientService.findById(id);
+        JPanel returnPanel = new JPanel();
+        returnPanel.add(returnHomeButton);
+        add(returnPanel, BorderLayout.NORTH); // Add the button at the top
 
-                    if (client != null) {
-                        String newPrenom = JOptionPane.showInputDialog("Enter new prenom:", client.getPrenom());
-                        String newNom = JOptionPane.showInputDialog("Enter new nom:", client.getNom());
-                        String newTelephone = JOptionPane.showInputDialog("Enter new telephone:",
-                                client.getTelephone());
-                        String newEmail = JOptionPane.showInputDialog("Enter new email:", client.getEmail());
+        setSize(800, 600);
+        setVisible(true);
 
-                        client.setPrenom(newPrenom);
-                        client.setNom(newNom);
-                        client.setTelephone(newTelephone);
-                        client.setEmail(newEmail);
-
-                        boolean isUpdated = clientService.update(client);
-                        if (isUpdated) {
-                            JOptionPane.showMessageDialog(frame, "Client updated successfully!");
-                            refreshTable(); // Refresh the table after modifying a client
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Client not found!");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Please select a client to modify!");
-                }
-            }
-        });
-
-        supprimerBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Logic to delete a client
-                int selectedRow = clientTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    int id = (int) clientTable.getValueAt(selectedRow, 0);
-                    Client client = clientService.findById(id);
-
-                    if (client != null) {
-                        boolean isDeleted = clientService.delete(client);
-                        if (isDeleted) {
-                            JOptionPane.showMessageDialog(frame, "Client deleted successfully!");
-                            refreshTable(); // Refresh the table after deleting a client
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Client not found!");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Please select a client to delete!");
-                }
-            }
-        });
-
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        // Refresh the table with clients' data
+        refreshTable();
     }
 
     private JButton createStyledButton(String text, Color buttonColor, Color hoverColor) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setBackground(buttonColor); // Violet color
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setBackground(buttonColor);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(120, 40));
-
-        button.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-
-        button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent evt) {
-                button.setBackground(hoverColor); // Darker shade for hover
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
             }
 
-            public void mouseExited(MouseEvent evt) {
-                button.setBackground(buttonColor); // Original color
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(buttonColor);
             }
         });
-
         return button;
     }
 
-    // Method to refresh the table after performing any action
+    // Helper method to refresh the table data with clients from ClientService
     private void refreshTable() {
-        // Clear existing data
-        tableModel.setRowCount(0);
+        tableModel.setRowCount(0); // Clear existing rows
 
-        // Fetch updated list of clients and add them to the table
+        // Get the list of clients from the service
         for (Client client : clientService.findAll()) {
-            tableModel.addRow(new Object[] { client.getId(), client.getPrenom(), client.getNom(), client.getTelephone(),
-                    client.getEmail() });
+            Object[] row = { client.getId(), client.getPrenom(), client.getNom(), client.getTelephone(),
+                    client.getEmail() };
+            tableModel.addRow(row); // Add a row to the table
         }
-    }
-
-    public static void main(String[] args) {
-        new GestionClients(); // Run the application
     }
 }

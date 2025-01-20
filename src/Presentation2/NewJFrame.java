@@ -21,7 +21,7 @@ public class NewJFrame extends JFrame {
         cardPanel.add(new LoginPage(), "LoginPage");
         cardPanel.add(new SignUpPage(), "SignUpPage");
         cardPanel.add(new HomePage(), "HomePage");
-        cardPanel.add(new GestionClientsPage(), "GestionClientsPage");
+        cardPanel.add(new GestionClients(), "GestionClientsPage");
 
         // Add the card panel to the content pane
         this.getContentPane().add(cardPanel);
@@ -29,31 +29,30 @@ public class NewJFrame extends JFrame {
         // Show the LoginPage by default
         cardLayout.show(cardPanel, "LoginPage");
 
+        // Set the default window settings
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
+        setSize(800, 600); // Adjust size to your preference
+        setLocationRelativeTo(null); // Center the window
     }
 
+    // Methods to switch between pages
     public void showHomePage() {
-        // Show the HomePage
         cardLayout.show(cardPanel, "HomePage");
     }
 
     public void showSignUpPage() {
-        // Show the SignUpPage
         cardLayout.show(cardPanel, "SignUpPage");
     }
 
+    public void showLoginPage() {
+        cardLayout.show(cardPanel, "LoginPage");
+    }
+
     public void showGestionClientsPage() {
-        // Show the GestionClientsPage
         cardLayout.show(cardPanel, "GestionClientsPage");
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> new NewJFrame().setVisible(true));
-    }
-
-    public void showLoginPage() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showLoginPage'");
     }
 }
